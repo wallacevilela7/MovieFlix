@@ -26,11 +26,7 @@ public class StreamingController {
 
     @GetMapping
     public ResponseEntity<List<StreamingResponse>> findAll() {
-        List<Streaming> items = streamingService.findAll();
-        return ResponseEntity.ok(items
-                .stream()
-                .map(StreamingMapper::toResponse)
-                .toList());
+        return ResponseEntity.ok(streamingService.findAll());
     }
 
     @GetMapping(path = "/{id}")

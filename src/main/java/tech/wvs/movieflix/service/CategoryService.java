@@ -3,8 +3,11 @@ package tech.wvs.movieflix.service;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import tech.wvs.movieflix.controller.request.CategoryRequest;
+import tech.wvs.movieflix.controller.response.CategoryResponse;
+import tech.wvs.movieflix.controller.response.MovieResponse;
 import tech.wvs.movieflix.entity.Category;
 import tech.wvs.movieflix.mapper.CategoryMapper;
+import tech.wvs.movieflix.mapper.MovieMapper;
 import tech.wvs.movieflix.repository.CategoryRepository;
 
 import java.util.List;
@@ -16,8 +19,11 @@ public class CategoryService {
 
     private final CategoryRepository categoryRepository;
 
-    public List<Category> findAll() {
-        return categoryRepository.findAll();
+    public List<CategoryResponse> findAll() {
+        return categoryRepository.findAll()
+                .stream()
+                .map(item -> CategoryMapper.toResponse(item))
+                .toList();
     }
 
     public Category create(CategoryRequest request) {

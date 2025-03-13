@@ -27,11 +27,7 @@ public class CategoryController {
 
     @GetMapping
     public ResponseEntity<List<CategoryResponse>> findAll() {
-        List<Category> items = categoryService.findAll();
-        return ResponseEntity.ok(items
-                .stream()
-                .map(CategoryMapper::toResponse)
-                .toList());
+        return ResponseEntity.ok(categoryService.findAll());
     }
 
     @GetMapping(path = "/{id}")
