@@ -26,13 +26,13 @@ public class CategoryService {
                 .toList();
     }
 
+    public Optional<Category> findById(Long id) {
+        return categoryRepository.findById(id);
+    }
+
     public Category create(CategoryRequest request) {
         var category = CategoryMapper.toEntity(request);
         return categoryRepository.save(category);
-    }
-
-    public Optional<Category> findById(Long id) {
-        return categoryRepository.findById(id);
     }
 
     public boolean deleteById(Long id) {
@@ -42,5 +42,20 @@ public class CategoryService {
         }
 
         return exists;
+    }
+
+    public Optional<Category> update(Long id, CategoryRequest request) {
+        var entity = categoryRepository.findById(id);
+
+        if (entity.isPresent()) {
+            updateFields(request, entity);
+            categoryRepository.save(entity.get());
+        }
+
+        return entity;
+    }
+
+    private void updateFields(CategoryRequest request, Optional<Category> entity) {
+        entity.get().setName(request.name());
     }
 }
