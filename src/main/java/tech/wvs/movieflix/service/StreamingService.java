@@ -26,8 +26,8 @@ public class StreamingService {
     }
 
     public Streaming create(StreamingRequest request) {
-        var category = StreamingMapper.toEntity(request);
-        return streamingRepository.save(category);
+        var entity = StreamingMapper.toEntity(request);
+        return streamingRepository.save(entity);
     }
 
     public Optional<Streaming> findById(Long id) {
