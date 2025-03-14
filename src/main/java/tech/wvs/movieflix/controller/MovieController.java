@@ -39,4 +39,32 @@ public class MovieController {
                 ResponseEntity.ok(MovieMapper.toResponse(entity.get())) :
                 ResponseEntity.notFound().build();
     }
+
+    @PutMapping(path = "/{id}")
+    public ResponseEntity<Void> update(@PathVariable Long id,
+                                                @RequestBody MovieRequest request) {
+        var entity = movieService.update(id, request);
+
+        return entity.isPresent() ?
+                ResponseEntity.noContent().build() :
+                ResponseEntity.notFound().build();
+    }
+
+    @GetMapping(path = "/search")
+    public ResponseEntity<List<MovieResponse>> findByCategory(@RequestParam Long category){
+            var items = movieService.findByCategory(category);
+
+            return !items.isEmpty() ?
+                    ResponseEntity.ok(items.stream().map(item -> MovieMapper.toResponse(item)).toList()) :
+                    ResponseEntity.notFound().build();
+    }
+
+    @DeleteMapping(path = "/{id}")
+    public ResponseEntity<Void> deleteById(@PathVariable Long id) {
+        var deleted = movieService.deleteById(id);
+
+        return deleted ?
+                ResponseEntity.noContent().build() :
+                ResponseEntity.notFound().build();
+    }
 }

@@ -62,4 +62,57 @@ public class MovieService {
     public Optional<Movie> findById(Long id) {
         return movieRepository.findById(id);
     }
+
+    public Optional<Movie> update(Long id, MovieRequest request) {
+        var entity = movieRepository.findById(id);
+
+        if (entity.isPresent()) {
+            updateFields(request, entity);
+            movieRepository.save(entity.get());
+        }
+
+        return entity;
+    }
+
+    private void updateFields(MovieRequest request, Optional<Movie> entity) {
+        if (request.title() != null && !request.title().isEmpty()) {
+            entity.get().setTitle(request.title());
+        }
+
+        if (request.description() != null && !request.description().isEmpty()) {
+            entity.get().setDescription(request.description());
+        }
+
+        if (request.releaseDate() != null) {
+            entity.get().setRelaseDate(request.releaseDate());
+        }
+
+        if (request.rating() != null) {
+            entity.get().setRating(request.rating());
+        }
+
+        if (request.categories() != null && !request.categories().isEmpty()) {
+            var categories = findValidCategories(request);
+            entity.get().setCategories(categories);
+        }
+
+        if (request.streamings() != null && !request.streamings().isEmpty()) {
+            var streamings = findValidStreamings(request);
+            entity.get().setStreamings(streamings);
+        }
+    }
+
+    public List<Movie> findByCategory(Long category) {
+        return movieRepository.findMovieByCategories(List.of(Category.builder().id(category).build()));
+    }
+
+    public boolean deleteById(Long id) {
+        var exists = movieRepository.existsById(id);
+
+        if (exists) {
+            movieRepository.deleteById(id);
+        }
+
+        return exists;
+    }
 }
