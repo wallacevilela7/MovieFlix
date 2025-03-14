@@ -42,4 +42,21 @@ public class StreamingService {
 
         return exists;
     }
+
+    public Optional<Streaming> update(Long id, StreamingRequest request) {
+        var entity = streamingRepository.findById(id);
+
+        if(entity.isPresent()) {
+            updateFields(request, entity);
+            streamingRepository.save(entity.get());
+        }
+
+        return entity;
+    }
+
+    private void updateFields(StreamingRequest request, Optional<Streaming> entity) {
+        if (request.name() != null && !request.name().isEmpty()) {
+            entity.get().setName(request.name());
+        }
+    }
 }

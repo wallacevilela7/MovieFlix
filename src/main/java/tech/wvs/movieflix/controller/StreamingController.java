@@ -45,4 +45,14 @@ public class StreamingController {
                 ResponseEntity.noContent().build() :
                 ResponseEntity.notFound().build();
     }
+
+    @PutMapping(path = "/{id}")
+    public ResponseEntity<Void> update(@PathVariable Long id,
+                                       @RequestBody StreamingRequest request){
+        var entity = streamingService.update(id, request);
+
+        return entity.isPresent() ?
+                ResponseEntity.noContent().build() :
+                ResponseEntity.notFound().build();
+    }
 }
