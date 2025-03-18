@@ -1,4 +1,6 @@
 package tech.wvs.movieflix.controller.request;
 
-public record StreamingRequest(String name) {
+import jakarta.validation.constraints.NotEmpty;
+
+public record StreamingRequest(@NotEmpty(message = "Nome do streaming é obrigatorio") String name) {
 }

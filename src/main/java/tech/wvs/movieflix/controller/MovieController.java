@@ -1,5 +1,6 @@
 package tech.wvs.movieflix.controller;
 
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -20,14 +21,14 @@ public class MovieController {
 
 
     @PostMapping
-    public ResponseEntity<MovieResponse> create(@RequestBody MovieRequest request) {
+    public ResponseEntity<MovieResponse> create(@Valid @RequestBody MovieRequest request) {
         var entity = movieService.create(request);
 
         return ResponseEntity.created(URI.create("/movieflix/movie/" + entity.getId())).body(MovieMapper.toResponse(entity));
     }
 
     @GetMapping
-    public ResponseEntity<List<MovieResponse>> findAll(){
+    public ResponseEntity<List<MovieResponse>> findAll() {
         return ResponseEntity.ok(movieService.findAll());
     }
 
@@ -42,7 +43,7 @@ public class MovieController {
 
     @PutMapping(path = "/{id}")
     public ResponseEntity<Void> update(@PathVariable Long id,
-                                                @RequestBody MovieRequest request) {
+                                       @Valid @RequestBody MovieRequest request) {
         var entity = movieService.update(id, request);
 
         return entity.isPresent() ?
@@ -51,12 +52,12 @@ public class MovieController {
     }
 
     @GetMapping(path = "/search")
-    public ResponseEntity<List<MovieResponse>> findByCategory(@RequestParam Long category){
-            var items = movieService.findByCategory(category);
+    public ResponseEntity<List<MovieResponse>> findByCategory(@RequestParam Long category) {
+        var items = movieService.findByCategory(category);
 
-            return !items.isEmpty() ?
-                    ResponseEntity.ok(items.stream().map(item -> MovieMapper.toResponse(item)).toList()) :
-                    ResponseEntity.notFound().build();
+        return !items.isEmpty() ?
+                ResponseEntity.ok(items.stream().map(item -> MovieMapper.toResponse(item)).toList()) :
+                ResponseEntity.notFound().build();
     }
 
     @DeleteMapping(path = "/{id}")

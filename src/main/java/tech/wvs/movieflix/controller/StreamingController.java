@@ -1,5 +1,6 @@
 package tech.wvs.movieflix.controller;
 
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -19,7 +20,7 @@ public class StreamingController {
     private final StreamingService streamingService;
 
     @PostMapping
-    public ResponseEntity<StreamingResponse> create(@RequestBody StreamingRequest request) {
+    public ResponseEntity<StreamingResponse> create(@Valid @RequestBody StreamingRequest request) {
         var created = streamingService.create(request);
         return ResponseEntity.created(URI.create("/movieflix/streaming/" + created.getId())).build();
     }
