@@ -17,6 +17,7 @@ import tech.wvs.movieflix.controller.request.UserRequest;
 import tech.wvs.movieflix.controller.response.LoginResponse;
 import tech.wvs.movieflix.controller.response.UserResponse;
 import tech.wvs.movieflix.entity.User;
+import tech.wvs.movieflix.exception.UsernameOrPasswordException;
 import tech.wvs.movieflix.mapper.UserMapper;
 import tech.wvs.movieflix.service.UserService;
 
@@ -51,7 +52,7 @@ public class AuthController {
             return ResponseEntity.ok(new LoginResponse(token));
         } catch (
                 BadCredentialsException e) {
-            throw new BadCredentialsException("Usuario ou senha invalido");
+            throw new UsernameOrPasswordException("Usuario ou senha invalido");
         }
     }
 }
