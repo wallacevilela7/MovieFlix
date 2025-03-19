@@ -1,5 +1,12 @@
 package tech.wvs.movieflix.controller;
 
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.media.ArraySchema;
+import io.swagger.v3.oas.annotations.media.Content;
+import io.swagger.v3.oas.annotations.media.Schema;
+import io.swagger.v3.oas.annotations.responses.ApiResponse;
+import io.swagger.v3.oas.annotations.security.SecurityRequirement;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
@@ -12,6 +19,7 @@ import tech.wvs.movieflix.service.MovieService;
 import java.net.URI;
 import java.util.List;
 
+@Tag(name = "Movie", description = "Recurso responsável por gerenciar os filmes")
 @RestController
 @RequestMapping("/movieflix/movie")
 @RequiredArgsConstructor
@@ -20,6 +28,10 @@ public class MovieController {
     private final MovieService movieService;
 
 
+    @Operation(summary = "Salvar filme", description = "Método responsável por salvar um filme",
+            security = @SecurityRequirement(name = "bearerAuth"))
+    @ApiResponse(responseCode = "201", description = "Filme salvo com sucesso",
+            content = @Content(schema = @Schema(implementation = MovieResponse.class)))
     @PostMapping
     public ResponseEntity<MovieResponse> create(@Valid @RequestBody MovieRequest request) {
         var entity = movieService.create(request);
@@ -27,11 +39,20 @@ public class MovieController {
         return ResponseEntity.created(URI.create("/movieflix/movie/" + entity.getId())).body(MovieMapper.toResponse(entity));
     }
 
+    @Operation(summary = "Buscar filmes", description = "Método responsável por buscar todos os filmes",
+            security = @SecurityRequirement(name = "bearerAuth"))
+    @ApiResponse(responseCode = "200", description = "Retorna todos os filmes cadastrados",
+            content = @Content(array = @ArraySchema(schema = @Schema(implementation = MovieResponse.class))))
     @GetMapping
     public ResponseEntity<List<MovieResponse>> findAll() {
         return ResponseEntity.ok(movieService.findAll());
     }
 
+    @Operation(summary = "Buscar filme por id", description = "Método responsável por buscar um filme por id",
+            security = @SecurityRequirement(name = "bearerAuth"))
+    @ApiResponse(responseCode = "200", description = "Filme encontrado com sucesso",
+            content = @Content(schema = @Schema(implementation = MovieResponse.class)))
+    @ApiResponse(responseCode = "404", description = "Filme não encontrado", content = @Content())
     @GetMapping(path = "/{id}")
     public ResponseEntity<MovieResponse> findById(@PathVariable Long id) {
         var entity = movieService.findById(id);
